@@ -2,6 +2,14 @@ target/
 lib_managed/
 src_managed/
 project/boot/
+project/project
+bin/
+
+logs                                                                                                                                                        
+target
+tmp
+.history
+dist
 
 # eclipse
 .project
