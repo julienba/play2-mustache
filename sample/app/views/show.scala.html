@@ -1,0 +1,35 @@
+@(contents: List[models.Content])
+
+@import org.jba.Mustache
+
+@main("Mustache demo") {
+	<h2>Template:</h2>
+    <ul>
+    	@for(content <- contents){
+    		@Mustache.render("content_item.html",content)
+    	}
+    </ul>
+    
+    <h2>MAJAX</h2>
+	<div id="majax"></div>
+}
+    
+
+<script type="text/javascript">
+(function($) {
+    $.getJSON('json', function(data) {
+        var items = [];        
+        for(var i in data){    
+            console.log(data[i]);
+            items[i] = PlayMustache.to_html('/content_item.html', data[i]);
+        }
+
+        $('#majax').html('<ul>' + items.join('') + '</ul>');
+    });
+})(jQuery);                    
+</script>
+
+
+
+
+

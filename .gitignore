@@ -1,0 +1,16 @@
+target/
+lib_managed/
+src_managed/
+project/boot/
+
+# eclipse
+.project
+.classpath
+.settings
+eclipse
+
+# OSX Noise
+.DS_Store
+
+# Vim Noise
+*.swp
