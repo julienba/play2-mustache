@@ -12,4 +12,4 @@ See sample project
 * https://github.com/janl/mustache.js
 
 # COMPILE
-sbt -Dplay.path=/Users/jbille/bin/play-2.0.2 -Dplay.version=2.0.2 publish
+sbt -Dplay.path=/your/path/to/play-2.0.2 -Dplay.version=2.0.2 publish
