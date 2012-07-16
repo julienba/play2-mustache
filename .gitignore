@@ -15,6 +15,7 @@ dist
 .project
 .classpath
 .settings
+.target
 eclipse
 
 # OSX Noise
