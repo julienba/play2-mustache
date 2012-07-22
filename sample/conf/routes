@@ -3,7 +3,6 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
 GET 	/show						controllers.Application.show
 GET 	/json						controllers.Application.json
 

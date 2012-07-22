@@ -10,18 +10,19 @@ import play.api.libs.json.Json._
 
 object Application extends Controller{
 
+  val user = User("jba@b.com", "jba")
+  val user2 = User("jba@b.com", "jba")
+  
+  val users = List(user, user2)
+  
   val contents = List(
-	Content(1, "first"),
-	Content(2, "second"),
-	Content(3, "third")
+	Content(1, "first", users),
+	Content(2, "second", users),
+	Content(3, "third", users)
   )
-  
-  def index = Action {
-    Ok(views.html.index("Your new application is ready."))
-  }
-  
+
   def show = Action {
-	val content = Content(1, "first")
+	val content = Content(1, "first", users)
     Ok(views.html.show(contents))
   }
   

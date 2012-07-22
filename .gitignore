@@ -5,7 +5,7 @@ project/boot/
 project/project
 bin/
 
-logs                                                                                                                                                        
+logs/
 target
 tmp
 .history

@@ -1,6 +1,7 @@
 package org.jba
 
 import com.github.mustachejava._
+import com.twitter.mustache._
 import java.io.{StringWriter, StringReader}
 import java.io.File
 
@@ -30,6 +31,7 @@ object Mustache {
 
   val rootPath = "app/views/mustache"
   private val mf = new DefaultMustacheFactory
+  mf.setObjectHandler(new TwitterObjectHandler)
   private val scriptValue: String = jsTemplate
   
   def loadAllTemplate = {
@@ -73,12 +75,13 @@ object Mustache {
     while(it.hasNext){
       val file = it.next
       val template = Source.fromFile(rootPath + "/" + file.getName).mkString
+
       scriptValue +=
         """
           "%s":"%s"
         """.format(StringEscapeUtils.escapeJavaScript("/" + file.getName), StringEscapeUtils.escapeJavaScript(template))
       
-      if(it.hasNext) scriptValue + ","
+      if(it.hasNext) scriptValue += ","
     }
     
     """<script type="text/javascript">window.__MUSTACHE_TEMPLATES={""" + scriptValue + """}</script>""";
