@@ -15,11 +15,9 @@ import play.api.Configuration._
 class MustachePlugin(app: Application) extends Plugin {
     
   override def onStart(){
-    if(app.mode == Mode.Prod){
-      Mustache.loadAllTemplate
-    }
-    
-    Nil
+    Logger("mustache").info("start on mode: " + app.mode)
+    Mustache.loadAllTemplate
+    Mustache.scriptValue = Mustache.jsTemplate
   }
 
   override lazy val enabled = {
@@ -32,7 +30,7 @@ object Mustache {
   val rootPath = "app/views/mustache"
   private val mf = new DefaultMustacheFactory
   mf.setObjectHandler(new TwitterObjectHandler)
-  private val scriptValue: String = jsTemplate
+  var scriptValue: String = jsTemplate
   
   def loadAllTemplate = {
     Logger("mustache").info("Load all mustache template")
