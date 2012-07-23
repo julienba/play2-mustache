@@ -18,7 +18,7 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).se
 )
 ```
 
-* add [play-mustache.js](https://github.com/julienba/play2-mustache/tree/master/project-code/public/javascript/play-mustache.js) your project asset
+* add [play-mustache.js](https://github.com/julienba/play2-mustache/tree/master/project-code/public/javascript/play-mustache.js) in your project asset
 
 * add com.jba.Mustache in default template import or import it in your view files
 
@@ -31,7 +31,7 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).s
 
 ## How to use
 
-Pur your mustache templates in directory `app/views/mustache/'
+Pur your mustache templates in directory `app/views/mustache/`
 
 ### In scala templating
 
