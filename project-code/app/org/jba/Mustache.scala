@@ -4,13 +4,12 @@ import com.github.mustachejava._
 import com.twitter.mustache._
 import java.io.{StringWriter, StringReader}
 import java.io.File
-
 import play.api.templates._
 import org.apache.commons.lang.StringEscapeUtils
 import scala.io.Source
-
 import play.api._
 import play.api.Configuration._
+import java.io.InputStream
 
 class MustachePlugin(app: Application) extends Plugin {
     
@@ -30,14 +29,16 @@ object Mustache {
   val rootPath = "app/views/mustache"
   private val mf = new DefaultMustacheFactory
   mf.setObjectHandler(new TwitterObjectHandler)
-  var scriptValue: String = jsTemplate
+  var scriptValue: String = ""
   
   def loadAllTemplate = {
     Logger("mustache").info("Load all mustache template")
     var dir = new File(rootPath)
     
     for(file <- dir.listFiles){
-      val template = Source.fromFile(rootPath + "/" + file.getName).mkString
+      // Source.fromFile(new File( path), "UTF-8").getLines()
+      Logger("mustache").debug("read: " + file.getName)  
+      val template = Source.fromFile(new File(rootPath + "/" + file.getName), "UTF-8").mkString
       val mustache = mf.compile(new StringReader(template), "/" + file.getName)
       mf.putTemplate("/" + file.getName, mustache)
     }
@@ -48,7 +49,7 @@ object Mustache {
     
     var mustache =
       if(Play.current.mode != Mode.Prod){
-        val source = scala.io.Source.fromFile(rootPath + "/" + template).mkString
+        val source = scala.io.Source.fromFile(new File(rootPath + "/" + template), "UTF-8").mkString
         val mustache = mf.compile(new StringReader(source), "/" + template)
         mf.putTemplate("/" + template, mustache)
         mustache
@@ -72,7 +73,7 @@ object Mustache {
     val it = dir.listFiles.iterator
     while(it.hasNext){
       val file = it.next
-      val template = Source.fromFile(rootPath + "/" + file.getName).mkString
+      val template = Source.fromFile(new File(rootPath + "/" + file.getName), "UTF-8").mkString
 
       scriptValue +=
         """
