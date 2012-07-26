@@ -35,8 +35,7 @@ object Mustache {
     Logger("mustache").info("Load all mustache template")
     var dir = new File(rootPath)
     
-    for(file <- dir.listFiles){
-      // Source.fromFile(new File( path), "UTF-8").getLines()
+    for(file <- dir.listFiles.filter(file => file.isFile() && file.getName.endsWith(".html"))){
       Logger("mustache").debug("read: " + file.getName)  
       val template = Source.fromFile(new File(rootPath + "/" + file.getName), "UTF-8").mkString
       val mustache = mf.compile(new StringReader(template), "/" + file.getName)
@@ -73,14 +72,17 @@ object Mustache {
     val it = dir.listFiles.iterator
     while(it.hasNext){
       val file = it.next
-      val template = Source.fromFile(new File(rootPath + "/" + file.getName), "UTF-8").mkString
-
-      scriptValue +=
-        """
-          "%s":"%s"
-        """.format(StringEscapeUtils.escapeJavaScript("/" + file.getName), StringEscapeUtils.escapeJavaScript(template))
       
-      if(it.hasNext) scriptValue += ","
+      if(file.isFile && file.getName.endsWith(".html")){
+        val template = Source.fromFile(new File(rootPath + "/" + file.getName), "UTF-8").mkString
+        
+        scriptValue +=
+          """
+            "%s":"%s"
+          """.format(StringEscapeUtils.escapeJavaScript("/" + file.getName), StringEscapeUtils.escapeJavaScript(template))
+          
+        if(it.hasNext) scriptValue += ","  
+      }
     }
     
     """<script type="text/javascript">window.__MUSTACHE_TEMPLATES={""" + scriptValue + """}</script>""";
