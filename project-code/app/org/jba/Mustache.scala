@@ -26,7 +26,7 @@ class MustachePlugin(app: Application) extends Plugin {
 
 object Mustache {
 
-  val rootPath = "app/views/mustache"
+  val rootPath = Play.current.path + "/app/views/mustache"
   private val mf = new DefaultMustacheFactory
   mf.setObjectHandler(new TwitterObjectHandler)
   var scriptValue: String = ""
