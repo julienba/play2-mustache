@@ -12,82 +12,82 @@ import play.api.Configuration._
 import java.io.InputStream
 
 class MustachePlugin(app: Application) extends Plugin {
-    
+  
+  lazy val instance = {
+    val i = new JavaMustache
+    i.loadAllTemplate
+    i
+  }
+
   override def onStart(){
     Logger("mustache").info("start on mode: " + app.mode)
-    Mustache.loadAllTemplate
-    Mustache.scriptValue = Mustache.jsTemplate
+    instance 
   }
+
+  def api: MustacheAPI = instance
 
   override lazy val enabled = {
     !app.configuration.getString("mustacheplugin").filter(_ == "disabled").isDefined
   } 
 }
 
-object Mustache {
 
-  val rootPath = Play.current.path + "/app/views/mustache"
+trait MustacheAPI {
+
+  def render(template: String, data: Any): Html
+
+  def script(): Html 
+}
+
+class JavaMustache extends MustacheAPI{
+
+  private lazy val fs = java.io.File.separator
+
+  private val rootPath = Play.current.path + fs + "app" + fs + "views"+ fs + "mustache"
+
   private val mf = new DefaultMustacheFactory
-  mf.setObjectHandler(new TwitterObjectHandler)
-  var scriptValue: String = ""
-  
-  def loadAllTemplate = {
-    Logger("mustache").info("Load all mustache template")
-    var dir = new File(rootPath)
-    
-    for(file <- dir.listFiles.filter(file => file.isFile() && file.getName.endsWith(".html"))){
-      Logger("mustache").debug("read: " + file.getName)  
-      val template = Source.fromFile(new File(rootPath + "/" + file.getName), "UTF-8").mkString
-      val mustache = mf.compile(new StringReader(template), "/" + file.getName)
-      mf.putTemplate("/" + file.getName, mustache)
-    }
-  }
-  
-  def render(template: String, data: Any): Html = {
-    Logger("mustache").debug("Mustache render template " + template)
-    
-    var mustache =
-      if(Play.current.mode != Mode.Prod){
-        val source = scala.io.Source.fromFile(new File(rootPath + "/" + template), "UTF-8").mkString
-        val mustache = mf.compile(new StringReader(source), "/" + template)
-        mf.putTemplate("/" + template, mustache)
-        mustache
-      }else{  
-      	mf.getTemplate("/" + template)
-      }
-    
-	val writer = new StringWriter()
-	mustache.execute(writer, data).flush()
-	writer.close()    
-    
-    Html(writer.toString())    
-  }
 
-  def jsTemplate: String = {
+  private val scriptValue = jsTemplate
+
+  mf.setObjectHandler(new TwitterObjectHandler)
+
+  private[this] def jsTemplate: String = {
     Logger("mustache").debug("Retrieve javascript template")
     var dir = new File(rootPath)
     
-    var scriptValue = ""
+    val sValue = new StringBuffer
     
     val it = dir.listFiles.iterator
     while(it.hasNext){
       val file = it.next
       
       if(file.isFile && file.getName.endsWith(".html")){
-        val template = Source.fromFile(new File(rootPath + "/" + file.getName), "UTF-8").mkString
+        val template = Source.fromFile(new File(rootPath + fs  + file.getName), "UTF-8").mkString
         
-        scriptValue +=
+        sValue.append(
           """
             "%s":"%s"
-          """.format(StringEscapeUtils.escapeJavaScript("/" + file.getName), StringEscapeUtils.escapeJavaScript(template))
-          
-        if(it.hasNext) scriptValue += ","  
+          """.format(StringEscapeUtils.escapeJavaScript(fs  + file.getName), StringEscapeUtils.escapeJavaScript(template))
+         ) 
+        if(it.hasNext) sValue.append(",")  
       }
     }
     
-    """<script type="text/javascript">window.__MUSTACHE_TEMPLATES={""" + scriptValue + """}</script>""";
+    """<script type="text/javascript">window.__MUSTACHE_TEMPLATES={""" + sValue.toString + """}</script>""";
   }
   
+  private[jba] def loadAllTemplate: Unit = {
+    Logger("mustache").info("Load all mustache template")
+    var dir = new File(rootPath)
+    
+    for(file <- dir.listFiles.filter(file => file.isFile() && file.getName.endsWith(".html"))){
+      Logger("mustache").debug("read: " + file.getName)  
+      val template = Source.fromFile(new File(rootPath + fs  + file.getName), "UTF-8").mkString
+      val mustache = mf.compile(new StringReader(template), fs  + file.getName)
+      mf.putTemplate("/" + file.getName, mustache)
+    }
+  }
+
   /**
    * Write template as javascript object
    */
@@ -99,4 +99,36 @@ object Mustache {
       Html(jsTemplate)
     }
   }
+
+  def render(template: String, data: Any): Html = {
+    Logger("mustache").debug("Mustache render template " + template)
+    
+    var mustache =
+      if(Play.current.mode != Mode.Prod){
+        val source = scala.io.Source.fromFile(new File(rootPath + fs  + template), "UTF-8").mkString
+        val mustache = mf.compile(new StringReader(source), fs  + template)
+        mf.putTemplate(fs  + template, mustache)
+        mustache
+      }else{  
+        mf.getTemplate(fs  + template)
+      }
+    
+  val writer = new StringWriter()
+  mustache.execute(writer, data).flush()
+  writer.close()    
+    
+    Html(writer.toString())    
+  }
+}
+
+object Mustache {
+  
+  private def plugin = play.api.Play.maybeApplication.map{app =>
+    app.plugin[MustachePlugin].getOrElse(throw new RuntimeException("you should enable MustachePlugin in play.plugins"))
+  }.getOrElse(throw new RuntimeException("you should have a running app in scope a this point"))
+
+  def render(template: String, data: Any): Html = plugin.api.render(template,data)
+  
+  def script(): Html = plugin.api.script()
+
 }
