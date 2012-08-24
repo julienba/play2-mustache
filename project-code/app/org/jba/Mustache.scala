@@ -113,9 +113,9 @@ class JavaMustache extends MustacheAPI{
         mf.getTemplate(fs  + template)
       }
     
-  val writer = new StringWriter()
-  mustache.execute(writer, data).flush()
-  writer.close()    
+    val writer = new StringWriter()
+    mustache.execute(writer, data).flush()
+    writer.close()    
     
     Html(writer.toString())    
   }
