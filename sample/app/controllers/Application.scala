@@ -8,6 +8,8 @@ import models._
 import play.api.libs.json._
 import play.api.libs.json.Json._
 
+import play.api.Play.current
+
 object Application extends Controller{
 
   val user = User("jba@b.com", "jba")
@@ -28,7 +30,12 @@ object Application extends Controller{
   
   def json = Action {
     import models.ModelFormater.ContentFormat
-   
+    
+    // /public/mustache/content_item
+    val test = Play.current.resource("/public/mustache/content_item.html")
+    println("TEST: " + test)
+    
+    
     Ok(toJson(contents)) 
   }
 }

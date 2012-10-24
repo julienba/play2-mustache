@@ -6,7 +6,7 @@
 	<h2>Template:</h2>
     <ul>
     	@for(content <- contents){
-    		@Mustache.render("content_item.html",content)
+    		@Mustache.render("content_item", content)
     	}
     </ul>
     
@@ -24,7 +24,9 @@
         var items = [];        
         for(var i in data){    
             console.log(data[i]);
-            items[i] = PlayMustache.to_html('/content_item.html', data[i]);
+            //items[i] = PlayMustache.to_html('/content_item.html', data[i]);
+            //console.log("test: " + MUSTACHE_TEMPLATES['content_item']);
+            items[i] = Mustache.render(MUSTACHE_TEMPLATES['content_item'], data[i]);
         }
 
         $('#majax').html('<ul>' + items.join('') + '</ul>');

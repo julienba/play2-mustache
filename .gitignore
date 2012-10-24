@@ -4,6 +4,7 @@ src_managed/
 project/boot/
 project/project
 bin/
+.cache
 
 logs/
 target
