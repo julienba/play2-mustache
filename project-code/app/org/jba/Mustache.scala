@@ -12,6 +12,7 @@ import play.api.templates._
 import play.api.Configuration._
 import play.api.Play.current
 
+
 class MustachePlugin(app: Application) extends Plugin {
   
   lazy val instance = {
@@ -25,7 +26,7 @@ class MustachePlugin(app: Application) extends Plugin {
     instance.checkFiles
     instance 
   }
-
+  
   def api: MustacheAPI = instance
 
   override lazy val enabled = {
@@ -34,10 +35,7 @@ class MustachePlugin(app: Application) extends Plugin {
 }
 
 trait MustacheAPI {
-
   def render(template: String, data: Any): Html
-
-  //def script(): Html 
 }
 
 class JavaMustache extends MustacheAPI{
@@ -54,18 +52,29 @@ class JavaMustache extends MustacheAPI{
       Logger.warn("app" + fs + "assets" + fs + "mustache directory is needed for mustache plugin")	
   }
 
+  private def readTemplate(template: String) = {
+    Logger("mustache").debug("load template: " + rootPath + template)
+    val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
+    val mustache = mf.compile(new InputStreamReader(input), template)
+    mf.putTemplate(template, mustache)
+    mustache    
+  }
+  
   def render(template: String, data: Any): Html = {
     Logger("mustache").debug("Mustache render template " + template)
         
     var mustache = {
-      val maybeTemplate = mf.getTemplate(template)
-      if(maybeTemplate == null){
-        Logger("mustache").debug("load template: " + rootPath + template)
-        val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
-        val mustache = mf.compile(new InputStreamReader(input), template)
-        mf.putTemplate(template, mustache)
-        mustache
-      } else maybeTemplate
+      
+      if(Play.isProd) {
+      
+        val maybeTemplate = mf.getTemplate(template)
+        if(maybeTemplate == null) {
+        	readTemplate(template)
+        } else maybeTemplate
+      
+      } else {
+        readTemplate(template)
+      }
     }
     
     
