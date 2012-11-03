@@ -44,7 +44,7 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).s
 
 ## How to use
 
-Pur your mustache templates in directory `app/assets/mustache/`
+Put your mustache templates in directory `app/assets/mustache/`
 
 ### In scala templating
 
