@@ -20,6 +20,8 @@ libraryDependencies += "com.twitter" %% "util-core" % "4.0.1" // For Twitter han
 
 libraryDependencies += "commons-lang" % "commons-lang" % "2.6"
 
+publishMavenStyle := false
+
 publishTo <<= (version) { version: String =>
   val localRepository = Resolver.file("local repo", new java.io.File(System.getProperty("user.home") + "/tmp/repo"))(Resolver.ivyStylePatterns)
   Some(localRepository)
