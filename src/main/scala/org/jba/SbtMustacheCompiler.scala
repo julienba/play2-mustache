@@ -28,11 +28,12 @@ object MustacheCompiler {
   import scala.collection.JavaConverters._
 
   import scalax.file._
+  import scalax.io._
   
   private lazy val compiler = {
     
     (source: File) => {
-      val mustacheCode = Path(source).slurpString.replace("\r", "")
+      val mustacheCode = Path(source).slurpString(Codec.UTF8).replace("\r", "")
       mustacheCode
     }
     
