@@ -67,3 +67,13 @@ Put your mustache templates in directory `app/assets/mustache/`
 Mustache.render(MUSTACHE_TEMPLATES['YOUR_MUSTACHE_TEMPLATE'], content);
 ```
 
+### Active the plugin
+
+create a file conf/play.plugins something like that inside:
+
+```
+1500:org.jba.MustachePlugin
+```
+
+
+
