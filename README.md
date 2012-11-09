@@ -69,7 +69,7 @@ Mustache.render(MUSTACHE_TEMPLATES['YOUR_MUSTACHE_TEMPLATE'], content);
 
 ### Active the plugin
 
-create a file conf/play.plugins something like that inside:
+create a file conf/play.plugins with something like that inside:
 
 ```
 1500:org.jba.MustachePlugin
