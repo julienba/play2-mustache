@@ -44,7 +44,16 @@ class JavaMustache extends MustacheAPI{
 
   private val rootPath = fs + "public" + fs + "mustache" + fs
   
-  private val mf = new DefaultMustacheFactory
+  private val mf = new DefaultMustacheFactory {
+    // override for load ressouce with play classloader
+    override def getReader(resourceName: String): java.io.Reader  = {
+      
+      val input = Play.current.resourceAsStream(rootPath + resourceName  + ".html").getOrElse(throw new Exception("mustache: could not find template: " + resourceName))
+      new InputStreamReader(input)
+    }    
+  }
+
+
   mf.setObjectHandler(new TwitterObjectHandler)
 
   private[jba] def checkFiles: Unit = {

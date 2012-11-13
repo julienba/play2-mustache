@@ -10,6 +10,6 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns)
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("play" % "sbt-plugin" % "2.0.3")
+addSbtPlugin("play" % "sbt-plugin" % "2.0.4")
 
-addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.0.0") 
+addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.0.1") 
