@@ -21,7 +21,6 @@ val appDependencies = Seq(
 
 val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(
   resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns),
-  resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns),
 
   // Mustache settings
   mustacheEntryPoints <<= (sourceDirectory in Compile)(base => base / "assets" / "mustache" ** "*.html"),
