@@ -12,7 +12,7 @@ object ApplicationBuild extends Build /*with MustacheBuild*/{
 
     val appDependencies = Seq(
       // Add your project dependencies here,
-      "org.jba" %% "play2-mustache" % "1.0.1",
+      "org.jba" %% "play2-mustache" % "1.0.2",
       "com.twitter" %% "util-core" % "4.0.1" // For Twitter handler
     )
 

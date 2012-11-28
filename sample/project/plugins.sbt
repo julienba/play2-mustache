@@ -5,11 +5,11 @@ logLevel := Level.Warn
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 // Local repository
-//resolvers += Resolver.file("local repo", new java.io.File(System.getProperty("user.home") + "/tmp/repo"))(Resolver.ivyStylePatterns)
+resolvers += Resolver.file("local repo", new java.io.File(System.getProperty("user.home") + "/tmp/repo"))(Resolver.ivyStylePatterns)
 
 resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns)
 
 // Use the Play sbt plugin for Play projects
 addSbtPlugin("play" % "sbt-plugin" % "2.0.4")
 
-addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.0.1") 
+addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.0.2") 

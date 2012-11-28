@@ -24,6 +24,7 @@ class MustachePlugin(app: Application) extends Plugin {
   override def onStart(){
     Logger("mustache").info("start on mode: " + app.mode)
     instance.checkFiles
+    
     instance 
   }
   
@@ -44,16 +45,20 @@ class JavaMustache extends MustacheAPI{
 
   private val rootPath = fs + "public" + fs + "mustache" + fs
   
-  private val mf = new DefaultMustacheFactory {
-    // override for load ressouce with play classloader
-    override def getReader(resourceName: String): java.io.Reader  = {
+  val mf = createMustacheFactory
+
+
+  private def createMustacheFactory = {
+    new DefaultMustacheFactory {
+      // override for load ressouce with play classloader
+      override def getReader(resourceName: String): java.io.Reader  = {
       
-      val input = Play.current.resourceAsStream(rootPath + resourceName  + ".html").getOrElse(throw new Exception("mustache: could not find template: " + resourceName))
-      new InputStreamReader(input)
+        val input = Play.current.resourceAsStream(rootPath + resourceName  + ".html").getOrElse(throw new Exception("mustache: could not find template: " + resourceName))
+        new InputStreamReader(input)
+      }    
     }    
   }
-
-
+  
   mf.setObjectHandler(new TwitterObjectHandler)
 
   private[jba] def checkFiles: Unit = {
@@ -63,9 +68,12 @@ class JavaMustache extends MustacheAPI{
 
   private def readTemplate(template: String) = {
     Logger("mustache").debug("load template: " + rootPath + template)
+    
+    val factory = if(Play.isProd) mf else createMustacheFactory // Avoid partial caching 
+    
     val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
-    val mustache = mf.compile(new InputStreamReader(input), template)
-    mf.putTemplate(template, mustache)
+    val mustache = factory.compile(new InputStreamReader(input), template)
+    factory.putTemplate(template, mustache)
     mustache    
   }
   

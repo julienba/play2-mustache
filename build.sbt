@@ -4,7 +4,7 @@ sbtPlugin := true
 
 name := "play2-plugins-mustache"
 
-version := "1.0.1"
+version := "1.0.2"
 
 organization := "org.jba"
 
