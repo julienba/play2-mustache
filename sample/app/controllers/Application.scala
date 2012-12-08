@@ -2,8 +2,9 @@ package controllers
 
 import play.api._
 import play.api.mvc._
-import models._
 
+import models._
+import models.ModelFormater._
 
 import play.api.libs.json._
 import play.api.libs.json.Json._
@@ -29,8 +30,6 @@ object Application extends Controller{
   }
   
   def json = Action {
-    import models.ModelFormater.ContentFormat
-    
-    Ok(toJson(contents)) 
+    Ok(toJson(contents))
   }
 }

@@ -12,12 +12,12 @@ import play.api.templates._
 import play.api.Configuration._
 import play.api.Play.current
 
-
 class MustachePlugin(app: Application) extends Plugin {
   
   lazy val instance = {
     val i = new JavaMustache
     i.checkFiles
+    //i.loadAllTemplate
     i
   }
 
@@ -47,7 +47,7 @@ class JavaMustache extends MustacheAPI{
   private val mf = new DefaultMustacheFactory
   mf.setObjectHandler(new TwitterObjectHandler)
 
-  private[jba] def checkFiles: Unit = {
+  private[jba] def checkFiles {
     if(!Play.getFile("app" + fs + "assets").exists())
       Logger.warn("app" + fs + "assets" + fs + "mustache directory is needed for mustache plugin")	
   }
@@ -57,6 +57,7 @@ class JavaMustache extends MustacheAPI{
     val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
     val mustache = mf.compile(new InputStreamReader(input), template)
     mf.putTemplate(template, mustache)
+    
     mustache    
   }
   
@@ -65,18 +66,17 @@ class JavaMustache extends MustacheAPI{
         
     var mustache = {
       
-      if(Play.isProd) {
+//      if(Play.isProd) {
       
         val maybeTemplate = mf.getTemplate(template)
         if(maybeTemplate == null) {
-        	readTemplate(template)
+          readTemplate(template)
         } else maybeTemplate
       
-      } else {
-        readTemplate(template)
-      }
+//      } else {
+//        readTemplate(template)
+//      }
     }
-    
     
     val writer = new StringWriter()
     mustache.execute(writer, data).flush()
@@ -84,6 +84,20 @@ class JavaMustache extends MustacheAPI{
     
     Html(writer.toString())    
   }
+  
+  private[jba] def loadAllTemplate: Unit = {
+    Logger("mustache").info("Load all mustache template")
+    
+    val tmplListURL: Option[java.net.URL] = Play.current.resource("mustache/mustache.tmpl")
+    
+    tmplListURL.map { url =>
+      for(fileName <- Source.fromFile(url.getFile()).getLines)
+        readTemplate(fileName)    
+    }.getOrElse {
+      Logger("mustache").error("Impossible to read file mustache/mustache.tmpl")
+    }
+  }  
+  
 }
 
 object Mustache {

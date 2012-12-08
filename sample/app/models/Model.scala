@@ -1,28 +1,31 @@
 package models
 
-import play.api.libs.json._    
-import play.api.libs.json.Json._
-import play.api.libs.json.Generic._
+/**
+ * Thanx to 
+ * http://mandubian.com/
+ */
+
+// IMPORTANT import this to have the required tools in your scope
+import play.api.libs.json._
+// imports required functional generic structures
+import play.api.libs.json.util._
+// imports implicit structure for Writes only (always try to import only what you need)
+import play.api.libs.json.Writes._
+
+import play.api.data.validation.ValidationError
+import play.api.libs.json.Reads._
 
 case class Content(id: Long, name: String, users: List[User])
 case class User(mail: String, name: String)
 
 object ModelFormater {
+  import play.api.libs.json._
+  import play.api.libs.functional.syntax._
+
+  implicit val userWrites = Json.format[User]
   
-  implicit val UserFormat: Format[User] = productFormat2("mail", "name")(User)(User.unapply)
-  
-  implicit object ContentFormat extends Format[Content] {
-    def reads(json: JsValue):Content = Content(
-      (json \ "id").as[Long],
-      (json \ "name").as[String],
-      (json \ "users").as[List[User]]
-    )
-    
-    def writes(i: Content): JsValue = JsObject(Seq(
-      "id" -> JsNumber(i.id),
-      "name" -> JsString(i.name),
-      "users" -> JsArray(i.users.map(UserFormat.writes(_)))
-    ))
-    
-  }  
+  implicit val contentWrites = Json.format[Content]
+
 }
+
+
