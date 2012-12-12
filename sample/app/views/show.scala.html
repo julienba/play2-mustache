@@ -46,7 +46,7 @@
         // MAJAX PARTIAL 
         for(var i in data){    
             console.log(data[i]);
-            items[i] = Mustache.render(MUSTACHE_TEMPLATES['content_partial_item'], data[i], {users: MUSTACHE_TEMPLATES['users']});
+            items[i] = Mustache.render(MUSTACHE_TEMPLATES['content_partial_item'], data[i], {'content/content_item': MUSTACHE_TEMPLATES['content/content_item']});
         }
 
         $('#partialmajax').html('<ul>' + items.join('') + '</ul>');        
