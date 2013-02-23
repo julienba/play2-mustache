@@ -1,22 +1,21 @@
 import sbt._
 import Keys._
-import PlayProject._
-//import org.jba.sbt.plugin.MustacheBuild
+import play.Project._
 import org.jba.sbt.plugin.MustachePlugin
 import org.jba.sbt.plugin.MustachePlugin._
 
-object ApplicationBuild extends Build /*with MustacheBuild*/{
+object ApplicationBuild extends Build {
 
     val appName         = "play2-mustachedemo"
     val appVersion      = "1.0-SNAPSHOT"
 
     val appDependencies = Seq(
       // Add your project dependencies here,
-      "org.jba" %% "play2-mustache" % "1.1.0",
-      "com.twitter" % "util-core_2.9.1" % "4.0.1" // For Twitter handler
+      "org.jba" %% "play2-mustache" % "1.1.1",
+      "com.twitter" %% "util-core" % "6.2.0" // For Twitter handler
     )
 
-    val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA, settings = Defaults.defaultSettings /*++ mustacheTemplatesSettings*/).settings(
+    val main = play.Project(appName, appVersion, appDependencies).settings(
       // Add your own project settings here
         
       resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns),
