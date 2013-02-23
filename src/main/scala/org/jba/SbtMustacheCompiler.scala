@@ -1,7 +1,7 @@
 package org.jba.sbt.plugin
 
 import sbt._
-import PlayProject._
+import play.Project._
 
 import com.github.mustachejava._
 import com.twitter.mustache._

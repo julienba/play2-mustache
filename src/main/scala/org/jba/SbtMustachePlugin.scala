@@ -3,7 +3,7 @@ package org.jba.sbt.plugin
 import sbt._
 import sbt.NameFilter._
 import Keys._
-import PlayProject._
+import play.Project._
 import org.apache.commons.lang.StringEscapeUtils
 
 object MustachePlugin extends sbt.Plugin {
