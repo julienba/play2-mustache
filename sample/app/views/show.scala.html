@@ -17,11 +17,11 @@
 	<div id="majax"></div>
 	
 	
-  <h2> Partial</h2>
+  <h2>Partial</h2>
   
   <ul>
     @for(content <- contents) {
-      @* @Mustache.render("content_partial_item", content) *@
+      @Mustache.render("content_partial_item", content)
     }
   </ul>  	
 

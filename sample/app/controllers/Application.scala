@@ -13,8 +13,8 @@ import play.api.Play.current
 
 object Application extends Controller{
 
-  val user = User("jba@b.com", "jba")
-  val user2 = User("jba@b.com", "jba")
+  val user = User("alice@mail.com", "alice")
+  val user2 = User("bob@mail.com", "bob")
   
   val users = List(user, user2)
   

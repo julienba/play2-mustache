@@ -44,8 +44,20 @@ class JavaMustache extends MustacheAPI{
 
   private val rootPath = fs + "public" + fs + "mustache" + fs
   
-  private val mf = new DefaultMustacheFactory
-  mf.setObjectHandler(new TwitterObjectHandler)
+  val mf = createMustacheFactory
+
+  private def createMustacheFactory = {
+    val factory = new DefaultMustacheFactory {
+      // override for load ressouce with play classloader
+      override def getReader(resourceName: String): java.io.Reader  = {
+        Logger("mustache").debug("read in factory: " + rootPath + resourceName + ".html")
+        val input = Play.current.resourceAsStream(rootPath + resourceName  + ".html").getOrElse(throw new Exception("mustache: could not find template: " + resourceName))
+        new InputStreamReader(input)
+      }   
+    }
+    factory.setObjectHandler(new TwitterObjectHandler)
+    factory
+  }
 
   private[jba] def checkFiles {
     if(!Play.getFile("app" + fs + "assets").exists())
@@ -54,9 +66,12 @@ class JavaMustache extends MustacheAPI{
 
   private def readTemplate(template: String) = {
     Logger("mustache").debug("load template: " + rootPath + template)
+
+    val factory = if(Play.isProd) mf else createMustacheFactory 
+
     val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
-    val mustache = mf.compile(new InputStreamReader(input), template)
-    mf.putTemplate(template, mustache)
+    val mustache = factory.compile(new InputStreamReader(input), template)
+    factory.putTemplate(template, mustache)
     
     mustache    
   }
@@ -66,16 +81,14 @@ class JavaMustache extends MustacheAPI{
         
     var mustache = {
       
-//      if(Play.isProd) {
-      
+      if(Play.isProd) {
         val maybeTemplate = mf.getTemplate(template)
         if(maybeTemplate == null) {
           readTemplate(template)
         } else maybeTemplate
-      
-//      } else {
-//        readTemplate(template)
-//      }
+      } else {
+        readTemplate(template)
+      }
     }
     
     val writer = new StringWriter()
