@@ -71,7 +71,7 @@ class JavaMustache extends MustacheAPI{
   def render(template: String, data: Any): Html = {
     Logger("mustache").debug("Mustache render template " + template)
         
-    var mustache = {
+    val mustache = {
       if(Play.isProd) {
         val maybeTemplate = mf.compile(template)
         if(maybeTemplate == null) {

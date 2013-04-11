@@ -24,7 +24,14 @@ class BasicTestSpec extends Specification {
       val params = Map('title -> "Title")
       val htmlRes = Mustache.render("title", params)
       htmlRes.toString.equals("<h3>Title</h3>")
+    }
+    
+    "compile with option parameters" in new WithApplication {
+      val params = Map('title -> Some("Title"))
+      val htmlRes = Mustache.render("title", params)
+      htmlRes.toString.equals("<h3>Title</h3>")
     }    
+    
     
     "wrong template" in new WithApplication {
       Mustache.render("title-wrong", Header("Title")) must throwA[Exception]
@@ -41,6 +48,5 @@ class BasicTestSpec extends Specification {
       
       Mustache.render("content_partial_item", content).toString must contain("alice")
     }
-  } 
-  
+  }  
 }
