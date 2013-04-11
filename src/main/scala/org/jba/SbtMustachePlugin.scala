@@ -26,7 +26,6 @@ object MustachePlugin extends sbt.Plugin {
       import scala.util.control.Exception._
       
       val jsSource = org.jba.sbt.plugin.MustacheCompiler.compile(mustacheFile, options)
-
       // Any error here would be because of Mustache, not the developer;
       // so we don't want compilation to fail.
 //      val minified = catching(classOf[CompilationException])                                                                                                

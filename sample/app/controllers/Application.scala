@@ -26,7 +26,7 @@ object Application extends Controller{
 
   def show = Action {
 	val content = Content(1, "first", users)
-    Ok(views.html.show(contents))
+    Ok(views.html.show(contents)) 
   }
   
   def json = Action {

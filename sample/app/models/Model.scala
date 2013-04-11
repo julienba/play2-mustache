@@ -1,7 +1,7 @@
 package models
 
 /**
- * Thanx to 
+ * Thanks to 
  * http://mandubian.com/
  */
 

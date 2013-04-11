@@ -6,13 +6,13 @@ import org.jba.sbt.plugin.MustachePlugin._
 
 object ApplicationBuild extends Build {
 
-    val appName         = "play2-mustachedemo"
+    val appName         = "play2-mustache-demo"
     val appVersion      = "1.0-SNAPSHOT"
 
     val appDependencies = Seq(
       // Add your project dependencies here,
-      "org.jba" %% "play2-mustache" % "1.1.1",
-      "com.twitter" %% "util-core" % "6.2.0" // For Twitter handler
+      "org.jba" %% "play2-mustache" % "1.1.2"
+      //"com.twitter" %% "util-core" % "6.2.0" // For Twitter handler
     )
 
     val main = play.Project(appName, appVersion, appDependencies).settings(

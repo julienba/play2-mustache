@@ -1,7 +1,7 @@
 package org.jba
 
-import com.github.mustachejava._
-import com.twitter.mustache._
+import com.github.mustachejava.DefaultMustacheFactory
+import com.twitter.mustache.ScalaObjectHandler
 import java.io.{StringWriter, InputStreamReader}
 
 import org.apache.commons.lang.StringEscapeUtils
@@ -16,14 +16,11 @@ class MustachePlugin(app: Application) extends Plugin {
   
   lazy val instance = {
     val i = new JavaMustache
-    i.checkFiles
-    //i.loadAllTemplate
     i
   }
 
   override def onStart(){
     Logger("mustache").info("start on mode: " + app.mode)
-    instance.checkFiles
     instance 
   }
   
@@ -53,15 +50,10 @@ class JavaMustache extends MustacheAPI{
         Logger("mustache").debug("read in factory: " + rootPath + resourceName + ".html")
         val input = Play.current.resourceAsStream(rootPath + resourceName  + ".html").getOrElse(throw new Exception("mustache: could not find template: " + resourceName))
         new InputStreamReader(input)
-      }   
+      }
     }
-    factory.setObjectHandler(new TwitterObjectHandler)
+    factory.setObjectHandler(new ScalaObjectHandler)
     factory
-  }
-
-  private[jba] def checkFiles {
-    if(!Play.getFile("app" + fs + "assets").exists())
-      Logger.warn("app" + fs + "assets" + fs + "mustache directory is needed for mustache plugin")	
   }
 
   private def readTemplate(template: String) = {
@@ -71,7 +63,7 @@ class JavaMustache extends MustacheAPI{
 
     val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
     val mustache = factory.compile(new InputStreamReader(input), template)
-    factory.putTemplate(template, mustache)
+    //factory.putTemplate(template, mustache)
     
     mustache    
   }
@@ -80,9 +72,8 @@ class JavaMustache extends MustacheAPI{
     Logger("mustache").debug("Mustache render template " + template)
         
     var mustache = {
-      
       if(Play.isProd) {
-        val maybeTemplate = mf.getTemplate(template)
+        val maybeTemplate = mf.compile(template)
         if(maybeTemplate == null) {
           readTemplate(template)
         } else maybeTemplate
@@ -101,21 +92,18 @@ class JavaMustache extends MustacheAPI{
   private[jba] def loadAllTemplate: Unit = {
     Logger("mustache").info("Load all mustache template")
     
-    val tmplListURL: Option[java.net.URL] = Play.current.resource("mustache/mustache.tmpl")
-    
-    tmplListURL.map { url =>
+    Play.current.resource("mustache/mustache.tmpl").map { url =>
       for(fileName <- Source.fromFile(url.getFile()).getLines)
         readTemplate(fileName)    
     }.getOrElse {
       Logger("mustache").error("Impossible to read file mustache/mustache.tmpl")
     }
   }  
-  
 }
 
 object Mustache {
   
-  private def plugin = play.api.Play.maybeApplication.map{app =>
+  private def plugin = play.api.Play.maybeApplication.map { app =>
     app.plugin[MustachePlugin].getOrElse(throw new RuntimeException("you should enable MustachePlugin in play.plugins"))
   }.getOrElse(throw new RuntimeException("you should have a running app in scope a this point"))
 
