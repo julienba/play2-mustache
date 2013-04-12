@@ -3,11 +3,6 @@ package org.jba.sbt.plugin
 import sbt._
 import play.Project._
 
-import com.github.mustachejava._
-import com.twitter.mustache._
-
-import org.apache.commons.lang.StringEscapeUtils
-
 import play.api._
 
 case class CompilationException(message: String, mustacheFile: File, atLine: Option[Int]) extends PlayException.ExceptionSource(

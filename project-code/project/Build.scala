@@ -9,7 +9,6 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     "com.github.spullara.mustache.java" % "compiler" % "0.8.11",
-    //"com.twitter" %% "util-core" % "6.2.0", // For Twitter handler
     "commons-lang" % "commons-lang" % "2.6"
   )
 

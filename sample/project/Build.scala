@@ -12,7 +12,6 @@ object ApplicationBuild extends Build {
     val appDependencies = Seq(
       // Add your project dependencies here,
       "org.jba" %% "play2-mustache" % "1.1.2"
-      //"com.twitter" %% "util-core" % "6.2.0" // For Twitter handler
     )
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
