@@ -1,7 +1,7 @@
 package org.jba
 
-import com.github.mustachejava._
-import com.twitter.mustache._
+import com.github.mustachejava.DefaultMustacheFactory
+import com.twitter.mustache.ScalaObjectHandler
 import java.io.{StringWriter, InputStreamReader}
 
 import org.apache.commons.lang.StringEscapeUtils
@@ -12,19 +12,15 @@ import play.api.templates._
 import play.api.Configuration._
 import play.api.Play.current
 
-
 class MustachePlugin(app: Application) extends Plugin {
   
   lazy val instance = {
     val i = new JavaMustache
-    i.checkFiles
     i
   }
 
   override def onStart(){
     Logger("mustache").info("start on mode: " + app.mode)
-    instance.checkFiles
-    
     instance 
   }
   
@@ -47,56 +43,43 @@ class JavaMustache extends MustacheAPI{
   
   val mf = createMustacheFactory
 
-
   private def createMustacheFactory = {
-    val mf = 
-      new DefaultMustacheFactory {
-        // override for load ressouce with play classloader
-        override def getReader(resourceName: String): java.io.Reader  = {
-        
-          val input = Play.current.resourceAsStream(rootPath + resourceName  + ".html").getOrElse(throw new Exception("mustache: could not find template: " + resourceName))
-          new InputStreamReader(input)
-        }    
+    val factory = new DefaultMustacheFactory {
+      // override for load ressouce with play classloader
+      override def getReader(resourceName: String): java.io.Reader  = {
+        Logger("mustache").debug("read in factory: " + rootPath + resourceName + ".html")
+        val input = Play.current.resourceAsStream(rootPath + resourceName  + ".html").getOrElse(throw new Exception("mustache: could not find template: " + resourceName))
+        new InputStreamReader(input)
       }
-      
-      mf.setObjectHandler(new TwitterObjectHandler)
-      mf
-  }
-  
-
-  private[jba] def checkFiles: Unit = {
-    if(!Play.getFile("app" + fs + "assets").exists())
-      Logger.warn("app" + fs + "assets" + fs + "mustache directory is needed for mustache plugin")	
+    }
+    factory.setObjectHandler(new ScalaObjectHandler)
+    factory
   }
 
   private def readTemplate(template: String) = {
     Logger("mustache").debug("load template: " + rootPath + template)
-    
-    val factory = if(Play.isProd) mf else createMustacheFactory // Avoid partial caching 
-    
+
+    val factory = if(Play.isProd) mf else createMustacheFactory 
+
     val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
     val mustache = factory.compile(new InputStreamReader(input), template)
-    factory.putTemplate(template, mustache)
+    
     mustache    
   }
   
   def render(template: String, data: Any): Html = {
     Logger("mustache").debug("Mustache render template " + template)
         
-    var mustache = {
-      
+    val mustache = {
       if(Play.isProd) {
-      
-        val maybeTemplate = mf.getTemplate(template)
+        val maybeTemplate = mf.compile(template)
         if(maybeTemplate == null) {
-        	readTemplate(template)
+          readTemplate(template)
         } else maybeTemplate
-      
       } else {
         readTemplate(template)
       }
     }
-    
     
     val writer = new StringWriter()
     mustache.execute(writer, data).flush()
@@ -104,11 +87,22 @@ class JavaMustache extends MustacheAPI{
     
     Html(writer.toString())    
   }
+  
+  private[jba] def loadAllTemplate: Unit = {
+    Logger("mustache").info("Load all mustache template")
+    
+    Play.current.resource("mustache/mustache.tmpl").map { url =>
+      for(fileName <- Source.fromFile(url.getFile()).getLines)
+        readTemplate(fileName)    
+    }.getOrElse {
+      Logger("mustache").error("Impossible to read file mustache/mustache.tmpl")
+    }
+  }  
 }
 
 object Mustache {
   
-  private def plugin = play.api.Play.maybeApplication.map{app =>
+  private def plugin = play.api.Play.maybeApplication.map { app =>
     app.plugin[MustachePlugin].getOrElse(throw new RuntimeException("you should enable MustachePlugin in play.plugins"))
   }.getOrElse(throw new RuntimeException("you should have a running app in scope a this point"))
 

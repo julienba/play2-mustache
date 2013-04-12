@@ -10,6 +10,6 @@ resolvers += Resolver.file("local repo", new java.io.File(System.getProperty("us
 resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns)
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("play" % "sbt-plugin" % "2.0.4")
+addSbtPlugin("play" % "sbt-plugin" % "2.1.0")
 
-addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.0.2") 
+addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.1.2") 

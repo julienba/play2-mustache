@@ -2,8 +2,9 @@ package controllers
 
 import play.api._
 import play.api.mvc._
-import models._
 
+import models._
+import models.ModelFormater._
 
 import play.api.libs.json._
 import play.api.libs.json.Json._
@@ -12,8 +13,8 @@ import play.api.Play.current
 
 object Application extends Controller{
 
-  val user = User("jba@b.com", "jba")
-  val user2 = User("jba@b.com", "jba")
+  val user = User("alice@mail.com", "alice")
+  val user2 = User("bob@mail.com", "bob")
   
   val users = List(user, user2)
   
@@ -25,12 +26,10 @@ object Application extends Controller{
 
   def show = Action {
 	val content = Content(1, "first", users)
-    Ok(views.html.show(contents))
+    Ok(views.html.show(contents)) 
   }
   
   def json = Action {
-    import models.ModelFormater.ContentFormat
-    
-    Ok(toJson(contents)) 
+    Ok(toJson(contents))
   }
 }

@@ -1,21 +1,16 @@
 package org.jba.sbt.plugin
 
 import sbt._
-import PlayProject._
-
-import com.github.mustachejava._
-import com.twitter.mustache._
-
-import org.apache.commons.lang.StringEscapeUtils
+import play.Project._
 
 import play.api._
 
-case class CompilationException(message: String, mustacheFile: File, atLine: Option[Int]) extends PlayException(
-  "Compilation error", message) with PlayException.ExceptionSource {
-  def line = atLine
-  def position = None
-  def input = Some(scalax.file.Path(mustacheFile))
-  def sourceName = Some(mustacheFile.getAbsolutePath)
+case class CompilationException(message: String, mustacheFile: File, atLine: Option[Int]) extends PlayException.ExceptionSource(
+  "Compilation error", message) {
+  def line = atLine.map(_.asInstanceOf[java.lang.Integer]).orNull
+  def position = null
+  def input = scalax.file.Path(mustacheFile).string
+  def sourceName = mustacheFile.getAbsolutePath
 }
 
 object MustacheCompiler {
@@ -33,7 +28,7 @@ object MustacheCompiler {
   private lazy val compiler = {
     
     (source: File) => {
-      val mustacheCode = Path(source).slurpString(Codec.UTF8).replace("\r", "")
+      val mustacheCode = Path(source).string.replace("\r", "")
       mustacheCode
     }
     

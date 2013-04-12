@@ -4,7 +4,7 @@
     
     <ul>
 		{{#users}}
-			<li>{{mail}} - {{name}}</li>
+			{{> content/content_item}}
 		{{/users}}    
     </ul>  
 </li>

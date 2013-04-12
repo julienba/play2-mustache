@@ -3,12 +3,13 @@ package org.jba.sbt.plugin
 import sbt._
 import sbt.NameFilter._
 import Keys._
-import PlayProject._
+import play.Project._
 import org.apache.commons.lang.StringEscapeUtils
 
 object MustachePlugin extends sbt.Plugin {
   
   val mustacheEntryPoints = SettingKey[PathFinder]("play-mustache-entry-points")
+  
   val mustacheOptions = SettingKey[Seq[String]]("play-mustache-options")
   
   val templates = scala.collection.mutable.Map.empty[String, String]
@@ -23,9 +24,8 @@ object MustachePlugin extends sbt.Plugin {
     { (mustacheFile, options) =>
       
       import scala.util.control.Exception._
-
+      
       val jsSource = org.jba.sbt.plugin.MustacheCompiler.compile(mustacheFile, options)
-
       // Any error here would be because of Mustache, not the developer;
       // so we don't want compilation to fail.
 //      val minified = catching(classOf[CompilationException])                                                                                                
@@ -99,10 +99,10 @@ object MustachePlugin extends sbt.Plugin {
   
   /**
    * Generate something like that:
-   * 	var MUSTACHE_TEMPLATES = {
-   * 		"content" : "content",
-   *		"content/content2" : "content"
-   *	};
+   *    var MUSTACHE_TEMPLATES = {
+   *        "content" : "content",
+   *"content/content2" : "content"
+   *};
    */  
   def jsScript: String = {
     val output = new StringBuilder
