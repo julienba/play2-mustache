@@ -5,11 +5,10 @@ import PlayProject._
 object ApplicationBuild extends Build {
 
   val appName         = "play2-mustache"
-  val appVersion      = "1.0.2"
+  val appVersion      = "1.0.4"
 
   val appDependencies = Seq(
-    "com.github.spullara.mustache.java" % "compiler" % "0.8.4",
-    "com.twitter" %% "util-core" % "4.0.1", // For Twitter handler
+    "com.github.spullara.mustache.java" % "compiler" % "0.8.11",
     "commons-lang" % "commons-lang" % "2.6"
   )
 

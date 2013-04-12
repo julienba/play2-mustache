@@ -65,7 +65,7 @@ object MustachePlugin extends sbt.Plugin {
           case (sourceFile, name) => { 
             val (debug, min, dependencies) = compile(sourceFile, options) 
             val out = new File(resources, "public/" + naming(name, false))
-            val outMin = new File(resources, "public/" + naming(name, true))                                                                                                                                                                                                                                                 
+            val outMin = new File(resources, "public/" + naming(name, true))
             IO.write(out, debug)
             
             // Add content in Map

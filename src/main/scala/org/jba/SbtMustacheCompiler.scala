@@ -3,8 +3,8 @@ package org.jba.sbt.plugin
 import sbt._
 import PlayProject._
 
-import com.github.mustachejava._
-import com.twitter.mustache._
+//import com.github.mustachejava._
+//import com.twitter.mustache._
 
 import org.apache.commons.lang.StringEscapeUtils
 

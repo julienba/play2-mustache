@@ -12,14 +12,13 @@ object ApplicationBuild extends Build /*with MustacheBuild*/{
 
     val appDependencies = Seq(
       // Add your project dependencies here,
-      "org.jba" %% "play2-mustache" % "1.0.2",
-      "com.twitter" %% "util-core" % "4.0.1" // For Twitter handler
+      "org.jba" %% "play2-mustache" % "1.0.4"
     )
 
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA, settings = Defaults.defaultSettings /*++ mustacheTemplatesSettings*/).settings(
       // Add your own project settings here
         
-      resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns),
+      //resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns),
       resolvers += Resolver.url("twitter", url("http://maven.twttr.com/"))(Resolver.ivyStylePatterns),
         
       //Import Mustache in all template

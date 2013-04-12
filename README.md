@@ -8,15 +8,14 @@ Use [Mustache](http://mustache.github.com)  templating with [play2](http://www.p
 
 ```
 resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns)
-addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.0.1")
+addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.0.4")
 ```
 
 * add dependencies in build file:
 
 ```
 val appDependencies = Seq(
-  "org.jba" %% "play2-mustache" % "1.0.1",
-  "com.twitter" %% "util-core" % "4.0.1" // For Twitter handler 
+  "org.jba" %% "play2-mustache" % "1.0.4"
 )
 
 val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).settings(

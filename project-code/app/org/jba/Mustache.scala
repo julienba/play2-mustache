@@ -1,7 +1,7 @@
 package org.jba
 
-import com.github.mustachejava._
-import com.twitter.mustache._
+import com.github.mustachejava.DefaultMustacheFactory
+import com.twitter.mustache.ScalaObjectHandler
 import java.io.{StringWriter, InputStreamReader}
 
 import org.apache.commons.lang.StringEscapeUtils
@@ -17,14 +17,11 @@ class MustachePlugin(app: Application) extends Plugin {
   
   lazy val instance = {
     val i = new JavaMustache
-    i.checkFiles
     i
   }
 
   override def onStart(){
     Logger("mustache").info("start on mode: " + app.mode)
-    instance.checkFiles
-    
     instance 
   }
   
@@ -47,7 +44,6 @@ class JavaMustache extends MustacheAPI{
   
   val mf = createMustacheFactory
 
-
   private def createMustacheFactory = {
     val mf = 
       new DefaultMustacheFactory {
@@ -59,16 +55,10 @@ class JavaMustache extends MustacheAPI{
         }    
       }
       
-      mf.setObjectHandler(new TwitterObjectHandler)
+      mf.setObjectHandler(new ScalaObjectHandler)
       mf
   }
   
-
-  private[jba] def checkFiles: Unit = {
-    if(!Play.getFile("app" + fs + "assets").exists())
-      Logger.warn("app" + fs + "assets" + fs + "mustache directory is needed for mustache plugin")	
-  }
-
   private def readTemplate(template: String) = {
     Logger("mustache").debug("load template: " + rootPath + template)
     
@@ -76,7 +66,6 @@ class JavaMustache extends MustacheAPI{
     
     val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
     val mustache = factory.compile(new InputStreamReader(input), template)
-    factory.putTemplate(template, mustache)
     mustache    
   }
   
@@ -87,7 +76,7 @@ class JavaMustache extends MustacheAPI{
       
       if(Play.isProd) {
       
-        val maybeTemplate = mf.getTemplate(template)
+        val maybeTemplate = mf.compile(template)
         if(maybeTemplate == null) {
         	readTemplate(template)
         } else maybeTemplate
