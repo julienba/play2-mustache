@@ -69,7 +69,11 @@ object MustachePlugin extends sbt.Plugin {
             IO.write(out, debug)
             
             // Add content in Map
-            templates(name.replace(".html", "").replace("mustache/", "")) = debug
+            if(System.getProperty("file.separator") == "\\"){
+              templates(name.replace(".html", "").replace("mustache\\", "").replace("\\","/")) = debug
+            } else {
+              templates(name.replace(".html", "").replace("mustache/", "")) = debug
+            }
             
             // Write concatenate Javascript file
             val jsFile = classDirectory / "public/javascripts/mustache-tmpl.js"
