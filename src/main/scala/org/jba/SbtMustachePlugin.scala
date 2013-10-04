@@ -14,7 +14,7 @@ object MustachePlugin extends sbt.Plugin {
   
   val templates = scala.collection.mutable.Map.empty[String, String]
   
-  lazy val mustacheTemplatesSettings: Seq[Project.Setting[_]] = Seq()
+  lazy val mustacheTemplatesSettings: Seq[Def.Setting[_]] = Seq()
       
   val MustacheFileCompiler = MyAssetsCompiler(
     "mustache",
@@ -48,11 +48,11 @@ object MustachePlugin extends sbt.Plugin {
     naming: (String, Boolean) => String,
     compile: (File, Seq[String]) => (String, Option[String], Seq[File]),
     optionsSettings: sbt.SettingKey[Seq[String]]) =
-    (sourceDirectory in Compile, resourceManaged in Compile, cacheDirectory, optionsSettings, filesSetting, classDirectory in Compile) map { (src, resources, cache, options, files, classDirectory) =>                                                                                                                                                                 
+    (sourceDirectory in Compile, resourceManaged in Compile, streams in Compile, optionsSettings, filesSetting, classDirectory in Compile) map { (src, resources, streams, options, files, classDirectory) =>                                                                                                                                                                 
 
       import java.io._
 
-      val cacheFile = cache / name    
+      val cacheFile = streams.cacheDirectory / name    
       val currentInfos = watch(src).get.map(f => f -> FileInfo.lastModified(f)).toMap
       val (previousRelation, previousInfo) = Sync.readInfo(cacheFile)(FileInfo.lastModified.format)                                                                                                                                                                                                                          
 
@@ -99,7 +99,7 @@ object MustachePlugin extends sbt.Plugin {
 
       }
 
-    }: sbt.Project.Initialize[sbt.Task[Seq[java.io.File]]]  
+    }: sbt.Def.Initialize[sbt.Task[Seq[java.io.File]]]  
   
   /**
    * Generate something like that:
