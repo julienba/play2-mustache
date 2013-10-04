@@ -11,7 +11,7 @@ object ApplicationBuild extends Build {
 
     val appDependencies = Seq(
       // Add your project dependencies here,
-      "org.jba" %% "play2-mustache" % "1.1.2"
+      "org.jba" %% "play2-mustache" % "1.1.3"
     )
 
     val main = play.Project(appName, appVersion, appDependencies).settings(

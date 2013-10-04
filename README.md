@@ -8,7 +8,8 @@ Use [Mustache](http://mustache.github.com)  templating with [play2](http://www.p
 
 ```
 resolvers += Resolver.url("julienba.github.com", url("http://julienba.github.com/repo/"))(Resolver.ivyStylePatterns)
-addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.1.2") // play 2.1
+addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.1.3") // play 2.2
+//addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.1.2") // play 2.1
 // addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.0.4") // play 2.0
 ```
 
@@ -16,7 +17,8 @@ addSbtPlugin("org.jba" % "play2-plugins-mustache" % "1.1.2") // play 2.1
 
 ```
 val appDependencies = Seq(
-  "org.jba" %% "play2-mustache" % "1.1.2" // play2.1
+  "org.jba" %% "play2-mustache" % "1.1.3" // play2.2.0
+  //"org.jba" %% "play2-mustache" % "1.1.2" // play2.1
   // "org.jba" %% "play2-mustache" % "1.0.4" // play2.0
 )
 
