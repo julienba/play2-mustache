@@ -6,7 +6,7 @@ object ApplicationBuild extends Build {
 
   val appName         = "play2-mustache"
 
-  val appVersion      = "1.1.2"
+  val appVersion      = "1.1.3"
 
   val appDependencies = Seq(
     "com.github.spullara.mustache.java" % "compiler" % "0.8.11",
