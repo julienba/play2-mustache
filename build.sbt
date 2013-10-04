@@ -8,6 +8,8 @@ version := "1.1.3"
 
 organization := "org.jba"
 
+scalacOptions += "-deprecation"
+
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.0")
 
 libraryDependencies += "commons-lang" % "commons-lang" % "2.6"
