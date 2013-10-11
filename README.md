@@ -35,7 +35,7 @@ val main = PlayProject(appName, appVersion, appDependencies, mainLang = JAVA).se
 
 * add [mustache.js](https://github.com/janl/mustache.js/) in your project asset
 
-* add com.jba.Mustache in default template import or import it in your view files
+* add org.jba.Mustache in default template import or import it in your view files
 
 ```
 val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
