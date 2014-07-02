@@ -31,8 +31,17 @@ class BasicTestSpec extends Specification {
       val htmlRes = Mustache.render("title", params)
       htmlRes.toString.equals("<h3>Title</h3>")
     }    
+   
+    "support .mustache file extension" in new WithApplication {
+      val params = Map('title -> "Title")
+      val html = Mustache.render("mustache_file_test", params)
+      html.toString.equals("<h3>Title</h3>")
+    }
     
-    
+    "play can load a mustache file" in new WithApplication {
+      val Some(file) = app.resourceAsStream("/Users/michael/Projects/personal/play2-mustache/sample/app/assets/mustache/title.html")
+    }
+
     "wrong template" in new WithApplication {
       Mustache.render("title-wrong", Header("Title")) must throwA[Exception]
     }

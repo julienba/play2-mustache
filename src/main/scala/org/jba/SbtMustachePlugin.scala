@@ -18,7 +18,7 @@ object MustachePlugin extends sbt.Plugin {
       
   val MustacheFileCompiler = MyAssetsCompiler(
     "mustache",
-    (_ ** "*.html"),
+    (_ ** ("*.html" || "*.mustache")),
     mustacheEntryPoints,   
     { (name, min) => name },
     { (mustacheFile, options) =>

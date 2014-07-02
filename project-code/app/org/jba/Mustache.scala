@@ -43,12 +43,24 @@ class JavaMustache extends MustacheAPI{
   
   val mf = createMustacheFactory
 
+  private def loadResource(mustacheName:String) = {
+    def load(file:String) = {
+      Play.current.resourceAsStream(file)
+      Logger("mustache").debug("read in factory: " + file)
+    }
+    def html = load(rootPath + mustacheName + ".html")
+    def mustache = load(rootPath + mustacheName + ".mustache")
+
+    html orElse mustache getOrElse {
+      throw new Exception("mustache: could not find template: " + resourceName)
+    }
+  }
+
   private def createMustacheFactory = {
     val factory = new DefaultMustacheFactory {
       // override for load ressouce with play classloader
       override def getReader(resourceName: String): java.io.Reader  = {
-        Logger("mustache").debug("read in factory: " + rootPath + resourceName + ".html")
-        val input = Play.current.resourceAsStream(rootPath + resourceName  + ".html").getOrElse(throw new Exception("mustache: could not find template: " + resourceName))
+        val input = loadResource(resourceName)
         new InputStreamReader(input)
       }
     }
@@ -61,7 +73,7 @@ class JavaMustache extends MustacheAPI{
 
     val factory = if(Play.isProd) mf else createMustacheFactory 
 
-    val input = Play.current.resourceAsStream(rootPath + template + ".html").getOrElse(throw new Exception("mustache: could not find template: " + template))
+    val input = loadResource(template)
     val mustache = factory.compile(new InputStreamReader(input), template)
     
     mustache    
