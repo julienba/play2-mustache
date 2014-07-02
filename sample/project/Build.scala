@@ -11,7 +11,7 @@ object ApplicationBuild extends Build {
 
     val appDependencies = Seq(
       // Add your project dependencies here,
-      "org.jba" %% "play2-mustache" % "1.1.3"
+      "org.jba" %% "play2-mustache" % "1.1.4"
     )
 
     val main = play.Project(appName, appVersion, appDependencies).settings(
@@ -25,7 +25,7 @@ object ApplicationBuild extends Build {
       //templatesImport += "org.jba.Mustache"
       
       // Mustache settings
-      mustacheEntryPoints <<= (sourceDirectory in Compile)(base => base / "assets" / "mustache" ** "*.html"),
+      mustacheEntryPoints <<= (sourceDirectory in Compile)(base => base / "assets" / "mustache" ** ("*.html" || "*.mustache")),
 
       mustacheOptions := Seq.empty[String],
       resourceGenerators in Compile <+= MustacheFileCompiler
