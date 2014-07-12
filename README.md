@@ -1,5 +1,7 @@
 # play2-mustache
 
+** This project is now deprecated ** with play 2.3 . You should look at sbt-web for doing the same things.
+
 Use [Mustache](http://mustache.github.com)  templating with [play2](http://www.playframework.org/)
 
 ##  How to install
